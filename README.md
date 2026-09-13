@@ -17,6 +17,8 @@ After a minute or two the app is at:
 
 `https://redwoodelectricutah-dev.github.io/Redwood-Electric-count-app/`
 
+If the repository is **private**, either make it **public** or use a GitHub plan that allows Pages on private repos. The Pages API is not writable from this setup, so the Settings toggle has to be clicked by a repo admin.
+
 ## Install on iPhone / iPad
 
 1. Open the Pages URL in **Safari** (not Chrome or in-app browsers)

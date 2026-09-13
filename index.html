@@ -146,6 +146,8 @@ function seed() {
 }
 let db = DB.get();
 let view = { page: "home", folderId: null, jobId: null };
+let job = null;
+let t = null;
 function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
 function today() { return new Date().toISOString().slice(0,10); }
 function save() { DB.set(db); }
@@ -194,7 +196,7 @@ function renderFolder() {
   </div></div>`;
 }
 function renderJob() {
-  const job = db.jobs.find(j => j.id === view.jobId);
+  job = db.jobs.find(j => j.id === view.jobId);
   if (!job) return goHome();
   setChrome(job.name || "Job", job.date || "", `<button class="ghost" onclick="goHome()">Home</button><button class="ghost" onclick="saveJob(true)">Save</button><button onclick="exportCSV()">CSV</button><button class="copper" onclick="window.print()">Print</button>`);
   const colT = job.items.map((_,c) => job.rows.reduce((a,r)=>a+(r.counts[c]||0),0));
@@ -234,7 +236,7 @@ function renderJob() {
     </div>`;
 }
 function renderTemplate() {
-  const t = db.templates.find(x => x.id === view.tplId);
+  t = db.templates.find(x => x.id === view.tplId);
   if (!t) return goHome();
   setChrome("Edit template", t.name, `<button class="ghost" onclick="openFolder('f-tpl')">Back</button><button class="copper" onclick="save(); alert('Template saved')">Save</button>`);
   document.getElementById("app").innerHTML = `
