@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Redwood Count" />
+  <meta name="theme-color" content="#1a2e24" />
+  <title>Redwood Count</title>
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="icon" href="./icon-192.png" type="image/png" />
+  <link rel="apple-touch-icon" href="./icon-192.png" />
+  <style>
+    :root {
+      --bg: #eef3ee;
+      --panel: #f7f4ee;
+      --ink: #16241c;
+      --muted: #5b6b62;
+      --line: #cfd8d2;
+      --header: #1a2e24;
+      --header-2: #234033;
+      --copper: #c45c2a;
+      --copper-d: #9a3f18;
+      --gold: #d9a441;
+      --sage: #3f6b55;
+      --cell: #fffcf8;
+      --total-bg: #e4eee8;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; background: var(--bg); color: var(--ink);
+      font-family: "Avenir Next", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif; }
+    body { display: flex; flex-direction: column; }
+    .top {
+      background: linear-gradient(160deg, var(--header) 0%, #2a4a3a 70%, #3a2a20 140%);
+      color: #f4efe4;
+      padding: 14px 16px 12px;
+      display: flex; justify-content: space-between; gap: 12px; align-items: flex-start;
+    }
+    .brand { display: flex; gap: 10px; align-items: center; }
+    .mark {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: var(--copper); display: grid; place-items: center;
+      font-weight: 800; color: #fff;
+    }
+    .brand h1 { margin: 0; font-size: 16px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+    .brand small { display: block; opacity: .72; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; }
+    .crumb { font-size: 13px; opacity: .85; margin-top: 8px; }
+    .top-actions { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+    button {
+      appearance: none; border: 0; border-radius: 10px;
+      min-height: 38px; padding: 8px 11px; font-weight: 650; font-size: 13px;
+      background: #f4efe4; color: var(--ink);
+    }
+    button.copper { background: var(--copper); color: #fff; }
+    button.ghost { background: transparent; color: #f4efe4; border: 1px solid rgba(244,239,228,.28); }
+    button.sage { background: var(--sage); color: #fff; }
+    .toolbar {
+      background: var(--panel);
+      border-bottom: 1px solid var(--line);
+      padding: 8px 12px;
+      display: flex; gap: 8px; flex-wrap: wrap; align-items: end;
+    }
+    .field { min-width: 140px; flex: 1; }
+    .field span { display: block; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; font-weight: 700; }
+    input[type="text"], input[type="date"], select {
+      width: 100%; border: 1px solid var(--line); background: #fff; border-radius: 8px;
+      padding: 8px 10px; font-size: 15px; color: var(--ink);
+    }
+    .sheet-wrap { flex: 1; overflow: auto; padding: 10px 10px 28px; }
+    table { border-collapse: collapse; min-width: 100%; background: var(--cell); box-shadow: 0 8px 30px rgba(22,36,28,.06); }
+    th, td { border: 1px solid var(--line); padding: 0; font-size: 13px; }
+    thead th {
+      position: sticky; top: 0; z-index: 4;
+      background: var(--header-2); color: #f4efe4; font-weight: 650; text-align: center;
+    }
+    thead th input {
+      width: 100%; min-width: 88px; border: 0; background: transparent;
+      color: #f4efe4; text-align: center; font-weight: 700; padding: 10px 6px; font-size: 12px;
+    }
+    .corner { width: 36px; background: var(--header) !important; color: var(--gold); font-size: 11px; text-align: center; }
+    .rowhead { width: 28px; text-align: center; background: #e8eee9; color: var(--muted); font-variant-numeric: tabular-nums; font-size: 11px; }
+    td.room input { width: 150px; border: 0; background: transparent; font-weight: 650; padding: 8px 10px; font-size: 14px; }
+    .counter { display: flex; align-items: stretch; justify-content: center; min-height: 46px; }
+    .counter b { min-width: 34px; display: grid; place-items: center; font-variant-numeric: tabular-nums; font-size: 16px; }
+    .counter button { min-width: 36px; min-height: 46px; border-radius: 0; background: #f3efe7; font-size: 18px; color: var(--copper-d); }
+    .counter button.plus { background: #efe4d8; color: var(--copper); }
+    .total { text-align: center; font-weight: 750; background: var(--total-bg); min-width: 56px; }
+    tfoot td { background: #dce8e1; font-weight: 750; }
+    .xbtn { background: transparent; color: var(--copper); min-height: 32px; }
+    .home { padding: 16px; }
+    .grid-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+    .card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 14px; }
+    .card h3 { margin: 0 0 4px; font-size: 16px; }
+    .card p { margin: 0; color: var(--muted); font-size: 12px; }
+    .card .ico { font-size: 22px; margin-bottom: 8px; }
+    dialog { border: 0; border-radius: 16px; width: min(520px, 94vw); padding: 18px; background: var(--panel); }
+    dialog::backdrop { background: rgba(16,28,22,.5); }
+    dialog h2 { margin: 0 0 12px; }
+    .list { display: flex; flex-direction: column; gap: 8px; max-height: 50vh; overflow: auto; }
+    .rowitem { display: flex; justify-content: space-between; gap: 8px; align-items: center; background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 10px; }
+    .hint { padding: 6px 14px 20px; color: var(--muted); font-size: 12px; }
+    @media print {
+      .top, .toolbar, .hint, .xbtn, .counter button, .rowhead { display: none !important; }
+      body { background: #fff; display: block; }
+      table { box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="top">
+    <div>
+      <div class="brand">
+        <div class="mark">RE</div>
+        <div>
+          <small>Redwood Electric</small>
+          <h1 id="screenTitle">Count Books</h1>
+        </div>
+      </div>
+      <div class="crumb" id="crumb">Folders</div>
+    </div>
+    <div class="top-actions" id="topActions"></div>
+  </div>
+  <div id="app"></div>
+  <div class="hint">Open in Safari → Share → Add to Home Screen. Templates and jobs stay on this iPad.</div>
+  <dialog id="dlg"></dialog>
+<script>
+const DB = {
+  get() {
+    const raw = localStorage.getItem("re-count-v2");
+    if (raw) return JSON.parse(raw);
+    return seed();
+  },
+  set(d) { localStorage.setItem("re-count-v2", JSON.stringify(d)); }
+};
+function seed() {
+  return {
+    folders: [ { id: "f-jobs", name: "Jobs" }, { id: "f-tpl", name: "Templates" } ],
+    templates: [
+      { id: "t-rough", name: "Residential rough-in", items: ["1-gang","2-gang","3-gang","Rec","GFCI","Can","Switch","Smoke"], rooms: ["Kitchen","Master","Living","Hall","Basement","Garage"] },
+      { id: "t-trim", name: "Trim / devices", items: ["Duplex","GFCI","Decora switch","Dimmer","Blank"], rooms: ["Kitchen","Baths","Bedrooms"] }
+    ],
+    jobs: []
+  };
+}
+let db = DB.get();
+let view = { page: "home", folderId: null, jobId: null };
+let job = null;
+let t = null;
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+function today() { return new Date().toISOString().slice(0,10); }
+function save() { DB.set(db); }
+function esc(s){ return String(s??"").replace(/[&<>"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m])); }
+function goHome(){ view = { page:"home" }; render(); }
+function openFolder(id){ view = { page:"folder", folderId:id }; render(); }
+function render() {
+  if (view.page === "home") renderHome();
+  else if (view.page === "folder") renderFolder();
+  else if (view.page === "job") renderJob();
+  else if (view.page === "template") renderTemplate();
+}
+function setChrome(title, crumb, actionsHtml) {
+  document.getElementById("screenTitle").textContent = title;
+  document.getElementById("crumb").textContent = crumb;
+  document.getElementById("topActions").innerHTML = actionsHtml;
+}
+function renderHome() {
+  setChrome("Count Books", "Redwood Electric", `<button class="ghost" onclick="newFolder()">+ Folder</button><button class="copper" onclick="newTemplate()">+ Template</button>`);
+  document.getElementById("app").innerHTML = `<div class="home"><div class="grid-cards">
+    ${db.folders.map(f => {
+      const n = f.id === "f-tpl" ? db.templates.length : db.jobs.filter(j => j.folderId === f.id).length;
+      return `<div class="card" onclick="openFolder('${f.id}')"><div class="ico">${f.id==="f-tpl"?"▦":"📁"}</div><h3>${esc(f.name)}</h3><p>${n} ${f.id==="f-tpl"?"templates":"jobs"}</p></div>`;
+    }).join("")}
+    <div class="card" onclick="newJob()"><div class="ico">＋</div><h3>New job sheet</h3><p>${db.jobs.length} saved jobs</p></div>
+  </div></div>`;
+}
+function renderFolder() {
+  const f = db.folders.find(x => x.id === view.folderId);
+  if (!f) return goHome();
+  if (f.id === "f-tpl") {
+    setChrome(f.name, "Templates", `<button class="ghost" onclick="goHome()">Home</button><button class="copper" onclick="newTemplate()">+ Template</button>`);
+    document.getElementById("app").innerHTML = `<div class="home"><div class="grid-cards">
+      ${db.templates.map(t => `<div class="card"><h3>${esc(t.name)}</h3><p>${t.items.length} columns · ${t.rooms.length} rooms</p>
+        <div style="margin-top:10px;display:flex;gap:6px">
+          <button class="sage" onclick="editTemplate('${t.id}')">Edit</button>
+          <button onclick="startJobFromTemplate('${t.id}')">Use</button>
+        </div></div>`).join("")}
+    </div></div>`;
+    return;
+  }
+  const jobs = db.jobs.filter(j => j.folderId === f.id);
+  setChrome(f.name, "Folder", `<button class="ghost" onclick="goHome()">Home</button><button class="copper" onclick="newJob('${f.id}')">+ Job</button>`);
+  document.getElementById("app").innerHTML = `<div class="home"><div class="grid-cards">
+    ${jobs.map(j => `<div class="card" onclick="openJob('${j.id}')"><h3>${esc(j.name || "Untitled")}</h3><p>${esc(j.date || "")} · ${esc(j.notes || "")}</p></div>`).join("") || "<p>No jobs in this folder.</p>"}
+  </div></div>`;
+}
+function renderJob() {
+  job = db.jobs.find(j => j.id === view.jobId);
+  if (!job) return goHome();
+  setChrome(job.name || "Job", job.date || "", `<button class="ghost" onclick="goHome()">Home</button><button class="ghost" onclick="saveJob(true)">Save</button><button onclick="exportCSV()">CSV</button><button class="copper" onclick="window.print()">Print</button>`);
+  const colT = job.items.map((_,c) => job.rows.reduce((a,r)=>a+(r.counts[c]||0),0));
+  const grand = colT.reduce((a,b)=>a+b,0);
+  document.getElementById("app").innerHTML = `
+    <div class="toolbar">
+      <div class="field"><span>Job name</span><input value="${esc(job.name)}" oninput="job.name=this.value" /></div>
+      <div class="field"><span>Date</span><input type="date" value="${esc(job.date)}" oninput="job.date=this.value" /></div>
+      <div class="field"><span>Folder</span>
+        <select onchange="job.folderId=this.value">${db.folders.filter(f=>f.id!=="f-tpl").map(f=>`<option value="${f.id}" ${f.id===job.folderId?"selected":""}>${esc(f.name)}</option>`).join("")}</select>
+      </div>
+      <div class="field"><span>Address / notes</span><input value="${esc(job.notes)}" oninput="job.notes=this.value" /></div>
+    </div>
+    <div class="sheet-wrap"><table>
+      <thead><tr><th class="corner">#</th><th>Room</th>
+      ${job.items.map((it,i)=>`<th><input value="${esc(it)}" onchange="renameItem(${i},this.value)" /></th>`).join("")}
+      <th>Total</th><th></th></tr></thead>
+      <tbody>
+      ${job.rows.map((row,r)=>`<tr>
+        <td class="rowhead">${r+1}</td>
+        <td class="room"><input value="${esc(row.room)}" onchange="job.rows[${r}].room=this.value" /></td>
+        ${row.counts.map((n,c)=>`<td><div class="counter">
+          <button onclick="chg(${r},${c},-1)">−</button><b>${n}</b>
+          <button class="plus" onclick="chg(${r},${c},1)">+</button>
+        </div></td>`).join("")}
+        <td class="total">${row.counts.reduce((a,b)=>a+b,0)}</td>
+        <td><button class="xbtn" onclick="delRow(${r})">×</button></td>
+      </tr>`).join("")}
+      </tbody>
+      <tfoot><tr><td></td><td style="padding:8px 10px">TOTAL</td>
+      ${colT.map(n=>`<td class="total">${n}</td>`).join("")}
+      <td class="total">${grand}</td><td></td></tr></tfoot>
+    </table></div>
+    <div class="toolbar">
+      <button class="sage" onclick="addRow()">+ Row</button>
+      <button onclick="addCol()">+ Column</button>
+    </div>`;
+}
+function renderTemplate() {
+  t = db.templates.find(x => x.id === view.tplId);
+  if (!t) return goHome();
+  setChrome("Edit template", t.name, `<button class="ghost" onclick="openFolder('f-tpl')">Back</button><button class="copper" onclick="save(); alert('Template saved')">Save</button>`);
+  document.getElementById("app").innerHTML = `
+    <div class="toolbar"><div class="field"><span>Template name</span><input value="${esc(t.name)}" oninput="t.name=this.value" /></div></div>
+    <div class="home">
+      <p style="font-weight:700">Columns</p>
+      ${t.items.map((it,i)=>`<div class="rowitem"><input value="${esc(it)}" onchange="t.items[${i}]=this.value" /><button onclick="t.items.splice(${i},1);render()">Remove</button></div>`).join("")}
+      <button class="sage" onclick="t.items.push('New item');render()">+ Column</button>
+      <p style="font-weight:700;margin-top:18px">Default rooms</p>
+      ${t.rooms.map((it,i)=>`<div class="rowitem"><input value="${esc(it)}" onchange="t.rooms[${i}]=this.value" /><button onclick="t.rooms.splice(${i},1);render()">Remove</button></div>`).join("")}
+      <button class="sage" onclick="t.rooms.push('Room');render()">+ Room</button>
+    </div>`;
+}
+function chg(r,c,d){
+  const job = db.jobs.find(j => j.id === view.jobId);
+  job.rows[r].counts[c] = Math.max(0, (job.rows[r].counts[c]||0)+d);
+  save(); render();
+}
+function renameItem(i,v){ db.jobs.find(j => j.id === view.jobId).items[i]=v; save(); }
+function addRow(){
+  const job = db.jobs.find(j => j.id === view.jobId);
+  job.rows.push({ room: "Room " + (job.rows.length+1), counts: job.items.map(()=>0) });
+  save(); render();
+}
+function delRow(i){
+  const job = db.jobs.find(j => j.id === view.jobId);
+  if (job.rows.length<2) return;
+  job.rows.splice(i,1); save(); render();
+}
+function addCol(){
+  const name = prompt("Column name","Item");
+  if (!name) return;
+  const job = db.jobs.find(j => j.id === view.jobId);
+  job.items.push(name);
+  job.rows.forEach(r => r.counts.push(0));
+  save(); render();
+}
+function saveJob(alertMe){ save(); if (alertMe) alert("Saved"); }
+function newFolder(){
+  const name = prompt("Folder name","Custom homes");
+  if (!name) return;
+  db.folders.push({ id: uid(), name }); save(); render();
+}
+function newTemplate(){
+  const t = { id: uid(), name: "New template", items: ["Rec","GFCI","Can"], rooms: ["Kitchen","Living"] };
+  db.templates.push(t); save();
+  view = { page:"template", tplId: t.id }; render();
+}
+function editTemplate(id){ view = { page:"template", tplId:id }; render(); }
+function startJobFromTemplate(tid, folderId){
+  const t = db.templates.find(x=>x.id===tid);
+  const dest = folderId || (db.folders.find(f=>f.id!=="f-tpl") || db.folders[0]).id;
+  const job = {
+    id: uid(), folderId: dest, name: "", date: today(), notes: "",
+    items: [...t.items],
+    rows: t.rooms.map(r => ({ room:r, counts: t.items.map(()=>0) }))
+  };
+  db.jobs.push(job); save();
+  view = { page:"job", jobId: job.id }; render();
+}
+function newJob(folderId){
+  const dlg = document.getElementById("dlg");
+  dlg.innerHTML = `<h2>New job from template</h2>
+    <div class="list">${db.templates.map(t=>`<div class="rowitem"><strong>${esc(t.name)}</strong><button class="copper" onclick="document.getElementById('dlg').close();startJobFromTemplate('${t.id}','${folderId||""}')">Use</button></div>`).join("")}</div>
+    <div style="margin-top:12px;text-align:right"><button onclick="document.getElementById('dlg').close()">Cancel</button></div>`;
+  dlg.showModal();
+}
+function openJob(id){ view = { page:"job", jobId:id }; render(); }
+function exportCSV(){
+  const job = db.jobs.find(j => j.id === view.jobId);
+  const lines = [`Job,${csv(job.name)}`,`Date,${csv(job.date)}`,`Notes,${csv(job.notes)}`,""];
+  lines.push(["Room", ...job.items, "Total"].map(csv).join(","));
+  job.rows.forEach(row => lines.push([row.room, ...row.counts, row.counts.reduce((a,b)=>a+b,0)].map(csv).join(",")));
+  const colT = job.items.map((_,c)=>job.rows.reduce((a,r)=>a+(r.counts[c]||0),0));
+  lines.push(["TOTAL", ...colT, colT.reduce((a,b)=>a+b,0)].map(csv).join(","));
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([lines.join("\n")],{type:"text/csv"}));
+  a.download = (job.name || "redwood-count").replace(/[^\w\- ]+/g," ").trim() + ".csv";
+  a.click();
+}
+function csv(v){ const s=String(v??""); return /[",\n]/.test(s)?`"${s.replace(/"/g,'""')}"`:s; }
+render();
+</script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("./sw.js");
+  });
+}
+</script>
+</body>
+</html>
