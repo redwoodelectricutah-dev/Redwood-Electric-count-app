@@ -181,7 +181,7 @@ function renderFolder() {
   if (f.id === "f-tpl") {
     setChrome(f.name, "Templates", `<button class="ghost" onclick="goHome()">Home</button><button class="copper" onclick="newTemplate()">+ Template</button>`);
     document.getElementById("app").innerHTML = `<div class="home"><div class="grid-cards">
-      ${db.templates.map(t => `<div class="card"><h3>${esc(t.name)}</h3><p>${t.items.length} columns · ${t.rooms.length} rows</p>`)
+      ${db.templates.map(t => `<div class="card"><h3>${esc(t.name)}</h3><p>${t.items.length} columns · ${t.rooms.length} rows</p>
         <div style="margin-top:10px;display:flex;gap:6px">
           <button class="sage" onclick="editTemplate('${t.id}')">Edit</button>
           <button onclick="startJobFromTemplate('${t.id}')">Use</button>
