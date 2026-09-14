@@ -1,4 +1,4 @@
-const CACHE_NAME = "redwood-count-shell-v1";
+const CACHE_NAME = "redwood-count-shell-v2";
 const SHELL = [
   "./",
   "./index.html",

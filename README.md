@@ -37,8 +37,8 @@ Hint text in the app: *Open in Safari → Share → Add to Home Screen. Template
 ## Using the app
 
 - **Folders:** Jobs and Templates (plus any folders you create)
-- **Templates:** column items and default rooms — seed includes *Residential rough-in* and *Trim / devices*
-- **Jobs:** rooms × item counts with +/−, sticky header row
+- **Templates:** column items and default rows — seed includes *Residential rough-in* and *Trim / devices*
+- **Jobs:** rows × item counts with +/−, sticky header row
 - **CSV** and **Print** from a job sheet
 - Data never leaves the device; offline works after the first visit (service worker caches the app shell)
 
