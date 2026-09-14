@@ -35,7 +35,12 @@
     .top {
       background: linear-gradient(160deg, var(--header) 0%, #2a4a3a 70%, #3a2a20 140%);
       color: #f4efe4;
-      padding: 14px 16px 12px;
+      /* Extra top/side padding for iPhone notch + status bar (viewport-fit=cover).
+         Background still fills the inset; buttons sit below it. */
+      padding: calc(14px + env(safe-area-inset-top, 0px))
+               calc(16px + env(safe-area-inset-right, 0px))
+               12px
+               calc(16px + env(safe-area-inset-left, 0px));
       display: flex; justify-content: space-between; gap: 12px; align-items: flex-start;
     }
     .brand { display: flex; gap: 10px; align-items: center; }
@@ -100,7 +105,10 @@
     dialog h2 { margin: 0 0 12px; }
     .list { display: flex; flex-direction: column; gap: 8px; max-height: 50vh; overflow: auto; }
     .rowitem { display: flex; justify-content: space-between; gap: 8px; align-items: center; background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 10px; }
-    .hint { padding: 6px 14px 20px; color: var(--muted); font-size: 12px; }
+    .hint {
+      padding: 6px 14px calc(20px + env(safe-area-inset-bottom, 0px));
+      color: var(--muted); font-size: 12px;
+    }
     @media print {
       .top, .toolbar, .hint, .xbtn, .counter button, .rowhead { display: none !important; }
       body { background: #fff; display: block; }
