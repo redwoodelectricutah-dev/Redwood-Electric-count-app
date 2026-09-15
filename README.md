@@ -49,4 +49,5 @@ Hint text in the app: *Open in Safari → Share → Add to Home Screen. Template
 | `index.html` | App UI and logic |
 | `manifest.webmanifest` | PWA name, standalone display, theme `#1a2e24`, `start_url` `./` |
 | `sw.js` | Caches the shell for offline; does not touch `localStorage` |
-| `icon-192.png` / `icon-512.png` | Home-screen icons (RE, copper on dark green) |
+| `logo.png` | Official Redwood Electric lockup (original asset; header mark) |
+| `icon-192.png` / `icon-512.png` | Home-screen / apple-touch icons (same lockup, fitted to square) |

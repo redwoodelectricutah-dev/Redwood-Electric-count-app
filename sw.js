@@ -1,8 +1,9 @@
-const CACHE_NAME = "redwood-count-shell-v2";
+const CACHE_NAME = "redwood-count-shell-v3";
 const SHELL = [
   "./",
   "./index.html",
   "./manifest.webmanifest",
+  "./logo.png",
   "./icon-192.png",
   "./icon-512.png"
 ];
